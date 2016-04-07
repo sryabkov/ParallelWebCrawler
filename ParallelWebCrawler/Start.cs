@@ -12,13 +12,13 @@ namespace ParallelWebCrawler
         {
             var crawler = new Crawler();
 
-            crawler.StartCrawling("/index.html");
+            crawler.Crawl("/index.html");
 
-            foreach(var url in crawler.VisitedUrls)
+            foreach (var url in crawler.VisitedUrls.OrderBy(n => n))
             {
                 Console.WriteLine(url);
             }
+
         }
-        
     }
 }

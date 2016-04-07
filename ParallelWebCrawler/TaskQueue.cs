@@ -31,17 +31,16 @@ namespace ParallelWebCrawler
             return task;
         }
 
-        //public Task<TResult> Enqueue<TResult>(Func<TResult> function, 
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    var task = new Task<TResult>(function, cancellationToken);
-        //    _taskQueue.Add(task);
-        //    return task;
-        //}
+        public Task<TResult> Enqueue<TResult>(Func<TResult> function,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var task = new Task<TResult>(function, cancellationToken);
+            _taskQueue.Add(task);
+            return task;
+        }
 
         void Consume()
         {
-            Console.WriteLine(Task.CurrentId);
             foreach (var task in _taskQueue.GetConsumingEnumerable())
             {
                 try

@@ -10,42 +10,29 @@ namespace ParallelWebCrawler
     {
         private readonly object _lock = new object();
         private HashSet<string> _visitedUrls = new HashSet<string>();
-        private TaskQueue _taskQueue = new TaskQueue(2);
+        //private TaskQueue _taskQueue = new TaskQueue(2);
 
-        public IEnumerable<string> VisitedUrls
-        {
-            get
-            {
-                foreach (var url in _visitedUrls)
-                {
-                    yield return url;
-                }
-            }
-        }
-
-        public void StartCrawling(string url)
-        {
-            _taskQueue.Enqueue(() => this.Crawl(url));
-        }
+        public IEnumerable<string> VisitedUrls => _visitedUrls;
 
         public void Crawl(string url)
         {
-            lock (_lock)
+
+            if (!_visitedUrls.Contains(url))
             {
-                if (!_visitedUrls.Contains(url))
-                {
-                    _visitedUrls.Add(url);
-                }
+                _visitedUrls.Add(url);
             }
 
-            foreach (var link in GetLinksEmulator.GetLinks(url))
+            string[] links = GetLinksEmulator.GetLinks(url);
+
+            if (links != null)
             {
-                lock (_lock)
+                foreach (var link in links)
                 {
-                    if( !_visitedUrls.Contains(link) )
+
+                    if (!_visitedUrls.Contains(link))
                     {
                         _visitedUrls.Add(link);
-                        _taskQueue.Enqueue(() => this.Crawl(link));
+                        this.Crawl(link);
                     }
                 }
             }
