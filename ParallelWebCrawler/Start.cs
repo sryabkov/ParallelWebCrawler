@@ -12,7 +12,8 @@ namespace ParallelWebCrawler
         {
             var crawler = new Crawler();
 
-            crawler.Crawl("/index.html");
+            Task task = Task.Run( () => crawler.Crawl("/index.html"));
+            task.Wait();
 
             foreach (var url in crawler.VisitedUrls.OrderBy(n => n))
             {

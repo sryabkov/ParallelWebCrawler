@@ -8,7 +8,7 @@ namespace ParallelWebCrawler
 {
     public static class GetLinksEmulator
     {
-        public static string[] GetLinks(string Url)
+        public async static Task<string[]> GetLinks(string Url)
         {
             string[] result = null;
 
@@ -16,7 +16,7 @@ namespace ParallelWebCrawler
             {
                 case "/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section1/subsection1/index.html",
                         "/section1/subsection2/index.html",
@@ -32,7 +32,7 @@ namespace ParallelWebCrawler
 
                 case "/section1/subsection1/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000); result = new string[] {
+                    await Task.Delay(1000); result = new string[] {
                         "/section1/subsection1/page1.html",
                         "/section1/subsection1/page2.html",
                         "/section1/subsection1/index.html", //circular reference
@@ -48,7 +48,7 @@ namespace ParallelWebCrawler
 
                 case "/section1/subsection2/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section1/subsection2/page1.html",
                         "/section1/subsection2/page2.html",
@@ -65,7 +65,7 @@ namespace ParallelWebCrawler
 
                 case "/section1/subsection3/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section1/subsection3/page1.html",
                         "/section1/subsection3/page2.html",
@@ -82,7 +82,7 @@ namespace ParallelWebCrawler
 
                 case "/section1/subsection4/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section1/subsection4/page1.html",
                         "/section1/subsection4/page2.html",
@@ -99,7 +99,7 @@ namespace ParallelWebCrawler
 
                 case "/section2/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section2/page1.html",
                         "/section2/page2.html",
@@ -113,7 +113,7 @@ namespace ParallelWebCrawler
 
                 case "/section3/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section3/page1.html",
                         "/section3/page2.html",
@@ -127,7 +127,7 @@ namespace ParallelWebCrawler
 
                 case "/section4/index.html":
                     //emulate delay while reading a page
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     result = new string[] {
                         "/section4/page1.html",
                         "/section4/page2.html",

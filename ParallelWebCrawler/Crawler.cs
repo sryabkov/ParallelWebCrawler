@@ -14,7 +14,7 @@ namespace ParallelWebCrawler
 
         public IEnumerable<string> VisitedUrls => _visitedUrls;
 
-        public void Crawl(string url)
+        public async Task Crawl(string url)
         {
 
             if (!_visitedUrls.Contains(url))
@@ -22,7 +22,7 @@ namespace ParallelWebCrawler
                 _visitedUrls.Add(url);
             }
 
-            string[] links = GetLinksEmulator.GetLinks(url);
+            string[] links = await GetLinksEmulator.GetLinks(url);
 
             if (links != null)
             {
@@ -32,7 +32,7 @@ namespace ParallelWebCrawler
                     if (!_visitedUrls.Contains(link))
                     {
                         _visitedUrls.Add(link);
-                        this.Crawl(link);
+                        await Crawl(link);
                     }
                 }
             }
