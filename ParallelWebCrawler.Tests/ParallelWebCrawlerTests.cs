@@ -42,25 +42,35 @@ namespace ParallelWebCrawler.Tests
                 "/section4/page2.html",
                 };
 
-            var tokenSource = new CancellationTokenSource();
-            var token = tokenSource.Token;
+            var cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
 
             var crawler = new Crawler();
 
+            //set the initial URL
             crawler.SetInitialUrl("/index.html");
 
-            var task1 = Task.Factory.StartNew(() => crawler.Crawl(token), token);
-            var task2 = Task.Factory.StartNew(() => crawler.Crawl(token), token);
+            //start a couple of worker tasks
+            var task1 = Task.Factory.StartNew(() => crawler.Crawl(cancellationToken), 
+                cancellationToken);
+            var task2 = Task.Factory.StartNew(() => crawler.Crawl(cancellationToken), 
+                cancellationToken);
 
             var taskCancel = Task.Run(async () =>
             {
+                //wait 15 seconds and send the cancel signal to the worker tasks,
+                //which will otherwise never end
                 await Task.Delay(TimeSpan.FromSeconds(15));
-                tokenSource.Cancel();
+                cancellationTokenSource.Cancel();
             });
 
             try
             {
                 Task.WaitAll(task1, task2, taskCancel);
+                foreach (var url in crawler.VisitedUrls.OrderBy(n => n))
+                {
+                    Trace.WriteLine(url);
+                }
             }
             catch (AggregateException e)
             {
@@ -69,11 +79,7 @@ namespace ParallelWebCrawler.Tests
             }
             finally
             {
-                foreach (var url in crawler.VisitedUrls.OrderBy(n => n))
-                {
-                    Trace.WriteLine(url);
-                }
-                tokenSource.Dispose();
+                cancellationTokenSource.Dispose();
             }
 
             Assert.That(crawler.VisitedUrls.OrderBy(n => n), Is.EquivalentTo(expectedResult));
