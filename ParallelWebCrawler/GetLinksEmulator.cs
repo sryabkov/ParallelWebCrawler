@@ -20,6 +20,7 @@ namespace ParallelWebCrawler
             string[] result = null;
             int emulationDelay = 500;
 
+            //add a comment
             switch (Url)
             {
                 case "/index.html":
